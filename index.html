@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Метрики сети Bitcoin — интерактивная D3.js</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="page-header">
+    <p class="eyebrow">Лабораторная работа №2 · Добавление интерактивности в визуализацию данных с использованием D3.js</p>
+    <h1>Метрики сети Bitcoin, 2019–2026</h1>
+    <p class="lead">
+      Набор данных содержит среднемесячные показатели блокчейна Bitcoin: рыночную цену,
+      количество транзакций в сутки, вычислительную мощность сети (хешрейт), средний размер
+      блока и сумму комиссий. Данные получены из открытого API
+      <a href="https://www.blockchain.com/explorer/charts" target="_blank" rel="noopener">blockchain.com</a>
+      и агрегированы по месяцам.
+    </p>
+  </header>
+
+  <main>
+    <!-- Сведения о загруженных данных -->
+    <section class="card" id="data-info">
+      <h2>Загруженные данные</h2>
+      <div id="status" class="status status--loading">Загрузка CSV-файла…</div>
+      <div class="info-grid" hidden id="info-grid">
+        <div class="stat">
+          <span class="stat__label">Файл</span>
+          <span class="stat__value stat__value--small" id="file-name"></span>
+        </div>
+        <div class="stat">
+          <span class="stat__label">Количество записей</span>
+          <span class="stat__value" id="row-count"></span>
+        </div>
+        <div class="stat">
+          <span class="stat__label">Количество столбцов</span>
+          <span class="stat__value" id="col-count"></span>
+        </div>
+        <div class="stat">
+          <span class="stat__label">Период</span>
+          <span class="stat__value stat__value--small" id="period"></span>
+        </div>
+      </div>
+      <div hidden id="columns-block">
+        <h3>Названия столбцов</h3>
+        <ul class="columns" id="columns"></ul>
+      </div>
+    </section>
+
+    <!-- Панель управления: выбор показателя и фильтр по годам -->
+    <section class="card controls" id="controls" hidden>
+      <label>
+        Показатель
+        <select id="metric-select"></select>
+      </label>
+      <label>
+        С года
+        <select id="year-from"></select>
+      </label>
+      <label>
+        По год
+        <select id="year-to"></select>
+      </label>
+      <p class="controls__hint">
+        Наведите курсор на столбец или точку: появится подсказка, выбранный элемент выделится,
+        а тот же год подсветится на втором графике.
+      </p>
+    </section>
+
+    <div class="viz-layout" id="viz-layout" hidden>
+      <div class="viz-charts">
+        <!-- Визуализация 1: столбчатая диаграмма -->
+        <section class="card chart-card" id="bar-card">
+          <h2 id="bar-title">Столбчатая диаграмма</h2>
+          <p class="chart-desc" id="bar-desc"></p>
+          <div class="chart" id="bar-chart"></div>
+        </section>
+
+        <!-- Визуализация 2: линейный график -->
+        <section class="card chart-card" id="line-card">
+          <h2 id="line-title">Линейный график</h2>
+          <p class="chart-desc" id="line-desc"></p>
+          <div class="chart" id="line-chart"></div>
+        </section>
+      </div>
+
+      <!-- Информационный блок: все показатели записи под курсором -->
+      <aside class="card info-panel" id="info-panel" aria-live="polite">
+        <h2 id="info-title">Подробно о записи</h2>
+        <p class="info-subtitle" id="info-subtitle"></p>
+        <dl class="info-list" id="info-list"></dl>
+      </aside>
+    </div>
+
+    <!-- Первые строки таблицы для проверки преобразования типов -->
+    <section class="card" hidden id="table-card">
+      <h2>Первые 10 записей (после преобразования типов)</h2>
+      <div class="table-wrap">
+        <table id="preview-table"></table>
+      </div>
+    </section>
+  </main>
+
+  <footer class="page-footer">
+    Источник: blockchain.com Charts API (market-price, n-transactions, hash-rate,
+    avg-block-size, transaction-fees-usd). Значения — средние за месяц.
+  </footer>
+
+  <div class="tooltip" id="tooltip" role="status" aria-live="polite"></div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
